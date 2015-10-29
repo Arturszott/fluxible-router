@@ -258,6 +258,20 @@ describe('History', function () {
             expect(testResult.pushState.url).to.equal(unicodeUrl);
             expect(windowMock.HTML5.document.title).to.equal('tt');
         });
+        it ('has pushState, appends baseURI', function () {
+            var win = _.extend(windowMock.HTML5, {
+                'document': {
+                    title: 'current title',
+                    baseURI: 'https://foo.com:4080/base/'
+                }
+            });
+            var history = new History({win: win});
+
+            history.pushState({foo: 'bar'}, 'current title', '/currentUrl');
+            expect(testResult.pushState.state).to.eql({origUrl: "base/currentUrl", foo: 'bar'});
+            expect(testResult.pushState.title).to.equal('current title');
+            expect(testResult.pushState.url).to.equal('base/currentUrl');
+        });
         it ('has pushState, Firefox', function () {
             var win = _.extend(windowMock.Firefox, {
                 'document': {
